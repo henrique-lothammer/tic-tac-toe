@@ -8,7 +8,7 @@ const TicTacToe = (): React.ReactElement => {
   const [winnerPaintigEffect, setWinnerPaintigEffect] = useState<number[]>([])
 
   const checkGameStatus = () => {
-    if (!board.includes(null)) setGameState('tie')
+    if (!board.includes(null)) setGameState('tied')
     const possibleGames = [
       [0, 1, 2],
       [3, 4, 5],
