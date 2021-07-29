@@ -1,10 +1,14 @@
 import React from 'react'
 
+import TicTacToe from './components/TicTacToe'
+import GlobalStyle from './styles/GlobalStyle'
+
 function App(): React.ReactElement {
   return (
-    <div className='App'>
-      <h1>hello world</h1>
-    </div>
+    <>
+      <TicTacToe />
+      <GlobalStyle />
+    </>
   )
 }
 
