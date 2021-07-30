@@ -17,10 +17,12 @@ export const Button = styled.button`
   font-size: 7rem;
   background: #fff;
   color: #000;
+  border-color: #7676764d;
 
   &:disabled {
     background: #fff;
     color: #111;
+    border-color: #7676764d;
   }
 
   &.winner {

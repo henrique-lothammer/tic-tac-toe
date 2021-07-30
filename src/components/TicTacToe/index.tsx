@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
+
+import { checkGameStatus, Status } from '../../helpers/TicTacToe'
+
 import { Board, Button, ActionContainer, RestartButton } from './styles'
 
 const TicTacToe = (): React.ReactElement => {
@@ -7,59 +10,43 @@ const TicTacToe = (): React.ReactElement => {
   const [playerTurn, setPlayerTurn] = useState('X')
   const [winnerPaintigEffect, setWinnerPaintigEffect] = useState<number[]>([])
 
-  const checkGameStatus = () => {
-    if (!board.includes(null)) setGameState('tied')
-    const possibleGames = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ]
-
-    possibleGames.forEach((game) => {
-      if (
-        board[game[0]] !== null &&
-        board[game[0]] === board[game[1]] &&
-        board[game[0]] === board[game[2]]
-      ) {
-        setWinnerPaintigEffect([game[0], game[1], game[2]])
-        setGameState(`winner ${board[game[0]]}`)
-      }
-    })
-  }
-
   const togglePlayerTurn = () =>
     playerTurn === 'X' ? setPlayerTurn('O') : setPlayerTurn('X')
 
-  const handleButton = (index: number) => {
-    board[index] = playerTurn
-    togglePlayerTurn()
-    checkGameStatus()
-    setBoard([...board])
-  }
-
-  const handleRestart = () => {
-    setGameState('playing')
-    setWinnerPaintigEffect([])
-    setBoard(new Array(9).fill(null))
-  }
-
-  useEffect(() => {
-    switch (gameState) {
-      case 'winner X':
-        setPlayerTurn('O')
+  const stateMachine = ({ status, winner, winnerGame }: Status) => {
+    switch (status) {
+      case 'playing':
+        togglePlayerTurn()
         break
-      case 'winner O':
-        setPlayerTurn('X')
+      case 'tied':
+        togglePlayerTurn()
+        setGameState('tied')
+        break
+      case 'winner':
+        setWinnerPaintigEffect(winnerGame)
+        setGameState(status)
+        setPlayerTurn(winner === 'O' ? 'X' : 'O')
         break
       default:
         break
     }
-  }, [gameState])
+  }
+
+  const selectSquare = (index: number) => {
+    board[index] = playerTurn
+
+    const gameStatus = checkGameStatus(board)
+
+    stateMachine(gameStatus)
+
+    setBoard([...board])
+  }
+
+  const restart = () => {
+    setGameState('playing')
+    setWinnerPaintigEffect([])
+    setBoard(new Array(9).fill(null))
+  }
 
   return (
     <div className='wrapper'>
@@ -68,8 +55,8 @@ const TicTacToe = (): React.ReactElement => {
         {board.map((value, index) => (
           <Button
             key={index}
-            onClick={() => handleButton(index)}
-            disabled={gameState !== 'playing'}
+            onClick={() => selectSquare(index)}
+            disabled={gameState !== 'playing' || value}
             className={winnerPaintigEffect.includes(index) ? 'winner' : ''}
           >
             {value}
@@ -78,7 +65,7 @@ const TicTacToe = (): React.ReactElement => {
       </Board>
       <ActionContainer>
         {gameState !== 'playing' && (
-          <RestartButton onClick={handleRestart}>Restart</RestartButton>
+          <RestartButton onClick={restart}>Restart</RestartButton>
         )}
       </ActionContainer>
     </div>
