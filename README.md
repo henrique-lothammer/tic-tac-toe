@@ -1,3 +1,5 @@
+[See it live](https://simplytictactoereact.netlify.app/)
+
 ## :computer: General info
 A tic tac toe made with ReactJS ( :
 	
