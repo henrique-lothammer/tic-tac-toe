@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const Board = styled.ul`
+export const Board = styled.div`
   width: 310px;
   height: 310px;
   display: grid;
