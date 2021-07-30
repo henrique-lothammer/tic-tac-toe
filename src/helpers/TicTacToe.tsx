@@ -26,10 +26,10 @@ export const checkGameStatus = (board: (null | string)[]): Status => {
       board[game[0]] === board[game[2]]
     ) {
       status.winnerGame = [game[0], game[1], game[2]]
-      status.status = 'winner'
+      status.status = `winner ${board[game[0]]}`
       status.winner = String(board[game[0]])
     }
   })
-  if (status.status === 'winner') return status
+  if (status.winner) return status
   return { ...status, status: 'playing' }
 }
